@@ -37,7 +37,7 @@
 		#region Public Constructors
 
 		/// <summary>
-		/// Конструтор класаа.
+		/// Конструтор класса.
 		/// </summary>
 		/// <param name="wellId">Id скважины.</param>
 		/// <param name="totalDepth">Общая глубина.</param>
