@@ -9,9 +9,7 @@
 
   <ItemGroup>
     <Folder Include="Abstractions\" />
-    <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
-    <Folder Include="Errors\" />
     <Folder Include="Results\" />
     <Folder Include="Services\" />
   </ItemGroup>
