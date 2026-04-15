@@ -49,6 +49,42 @@
 			return files[0].TryGetLocalPath();
 		}
 
+		/// <inheritdoc />
+		public async Task<string?> PickJsonSaveFileAsync()
+		{
+			IClassicDesktopStyleApplicationLifetime? desktopLifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+
+			Window? mainWindow = desktopLifetime?.MainWindow;
+
+			if (mainWindow is null)
+			{
+				return null;
+			}
+
+			IStorageFile? file = await mainWindow.StorageProvider.SaveFilePickerAsync(
+				new FilePickerSaveOptions
+				{
+					Title = "Save well summary",
+					SuggestedFileName = "well-summary.json",
+					DefaultExtension = "json",
+					ShowOverwritePrompt = true,
+					FileTypeChoices =
+					[
+						new FilePickerFileType("JSON file")
+						{
+							Patterns = ["*.json"]
+						}
+					]
+				});
+
+			if (file is null)
+			{
+				return null;
+			}
+
+			return file.TryGetLocalPath();
+		}
+
 		#endregion Public Methods
 	}
 }
