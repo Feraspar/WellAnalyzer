@@ -25,8 +25,10 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
+            <!-- Кнопка выбора и открытия файла. -->
             <Button Content="Open CSV file" Command="{Binding OpenFileCommand}" />
 
+            <!-- Текст с технической информацией. -->
             <TextBlock Grid.Column="1" 
                        VerticalAlignment="Center" 
                        HorizontalAlignment="Left" 
@@ -34,7 +36,7 @@
                        Text="{Binding StatusMessage}" />
 
         </Grid>
-
+            <!-- Таблица со сводной информацией. -->
             <GroupBox Grid.Row="1" Margin="0,10,0,0" Header="Well summary">
                 <DataGrid ItemsSource="{Binding WellSummaries}" AutoGenerateColumns="False" IsReadOnly="True">
 					<DataGrid.Columns>
@@ -46,7 +48,8 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
-
+            
+        <!-- Таблица со списком ошибок. -->
             <GroupBox Grid.Row="1" Grid.Column="1" Margin="0,10,0,0" Header="Errors">
 				<DataGrid ItemsSource="{Binding ValidationErrors}" AutoGenerateColumns="False" IsReadOnly="True">
 					<DataGrid.Columns>
