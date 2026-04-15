@@ -4,6 +4,7 @@
 	using System.Linq;
 	using WellAnalyzer.Abstractions;
 	using WellAnalyzer.Models;
+	using WellAnalyzer.Results;
 
 	/// <summary>
 	/// Сервис валидации данных по скважине.
@@ -13,7 +14,7 @@
 		#region Public Methods
 
 		/// <inheritdoc />
-		public List<ValidationError> Validate(List<ImportedWellRow> rows)
+		public WellValidationResult Validate(List<ImportedWellRow> rows)
 		{
 			List<ValidationError> errors = new List<ValidationError>();
 			List<ImportedWellRow> validRows = new List<ImportedWellRow>();
@@ -28,9 +29,11 @@
 				}
 			}
 
-			ValidateOverlaps(validRows, errors);
+			HashSet<int> invalidLineNumbers = ValidateOverlaps(validRows, errors);
 
-			return errors;
+			List<ImportedWellRow> finalValidRows = validRows.Where(row => !invalidLineNumbers.Contains(row.LineNumber)).ToList();
+
+			return new WellValidationResult(finalValidRows, errors);
 		}
 
 		#endregion Public Methods
@@ -42,8 +45,10 @@
 		/// </summary>
 		/// <param name="rows">Список строк</param>
 		/// <param name="errors">Список ошибок.</param>
-		private void ValidateOverlaps(List<ImportedWellRow> rows, List<ValidationError> errors)
+		private HashSet<int> ValidateOverlaps(List<ImportedWellRow> rows, List<ValidationError> errors)
 		{
+			HashSet<int> invalidLineNumbers = new HashSet<int>();
+
 			List<IGrouping<string, ImportedWellRow>> rowsByWell = rows.GroupBy(row => row.WellId).ToList();
 
 			foreach (IGrouping<string, ImportedWellRow> group in rowsByWell)
@@ -58,9 +63,12 @@
 					if (currentRow.DepthFrom < previousRow.DepthTo)
 					{
 						errors.Add(new ValidationError(currentRow.LineNumber, currentRow.WellId, $"Interval overlaps with previous interval [{previousRow.DepthFrom}; {previousRow.DepthTo}]."));
+						invalidLineNumbers.Add(currentRow.LineNumber);
 					}
 				}
 			}
+
+			return invalidLineNumbers;
 		}
 
 		/// <summary>
