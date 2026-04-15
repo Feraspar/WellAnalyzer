@@ -204,15 +204,15 @@ namespace WellAnalyzer.ViewModels
 				FillSummaries(wellSummaries);
 				FillErrors(allErrors);
 
-				StatusMessage = $"Загружено скважин: {wellSummaries.Count}. Ошибок: {allErrors.Count}.";
+				StatusMessage = $"Loaded wells: {wellSummaries.Count}. Errors: {allErrors.Count}.";
 			}
 			catch (OperationCanceledException)
 			{
-				StatusMessage = "Операция отменена.";
+				StatusMessage = "The operation has been cancelled.";
 			}
 			catch (Exception ex)
 			{
-				StatusMessage = $"Произошла ошибка: {ex.Message}";
+				StatusMessage = $"An error occurred: {ex.Message}";
 			}
 			finally
 			{
