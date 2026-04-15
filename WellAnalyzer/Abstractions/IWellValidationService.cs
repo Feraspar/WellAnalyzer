@@ -15,7 +15,7 @@
 		/// Вадириует данные из входящих строк.
 		/// </summary>
 		/// <param name="rows">Список строк.</param>
-		/// <returns>Список ошибок.</returns>
+		/// <returns>Результат валидации.</returns>
 		WellValidationResult Validate(List<ImportedWellRow> rows);
 
 		#endregion Public Methods
