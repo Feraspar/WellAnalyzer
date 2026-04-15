@@ -27,8 +27,8 @@
 		/// <summary>
 		/// Конструктор класса.
 		/// </summary>
-		/// <param name="rows"></param>
-		/// <param name="errors"></param>
+		/// <param name="rows">Список успешно прочитанных строк.</param>
+		/// <param name="errors">Список ошибок при импорте файла.</param>
 		public CsvImportResult(List<ImportedWellRow> rows, List<ValidationError> errors)
 		{
 			Rows = rows;
