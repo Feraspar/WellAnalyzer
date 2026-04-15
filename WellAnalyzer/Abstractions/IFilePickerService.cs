@@ -15,6 +15,12 @@
 		/// <returns>Путь к файлу.</returns>
 		Task<string?> PickCsvFileAsync();
 
+		/// <summary>
+		/// Открывает диалог выбора пути сохранения JSON-файла.
+		/// </summary>
+		/// <returns>Путь к файлу.</returns>
+		Task<string?> PickJsonSaveFileAsync();
+
 		#endregion Public Methods
 	}
 }

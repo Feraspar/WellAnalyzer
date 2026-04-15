@@ -70,6 +70,7 @@ namespace WellAnalyzer
 			services.AddSingleton<IWellBuilderService, WellBuilderService>();
 			services.AddSingleton<IWellSummaryService, WellSummaryService>();
 			services.AddSingleton<IWellValidationService, WellValidationService>();
+			services.AddSingleton<IJsonExportService, JsonExportService>();
 
 			services.AddTransient<MainWindowViewModel>();
 		}
