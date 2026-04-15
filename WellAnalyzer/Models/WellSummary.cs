@@ -8,19 +8,9 @@
 		#region Public Properties
 
 		/// <summary>
-		/// Средняя пористость.
+		/// Id скважины.
 		/// </summary>
-		public double AveragePorosity { get; }
-
-		/// <summary>
-		/// Количество интервалов.
-		/// </summary>
-		public int IntervalCount { get; }
-
-		/// <summary>
-		/// Самая распространённая порода.
-		/// </summary>
-		public string MostCommonRock { get; }
+		public string WellId { get; }
 
 		/// <summary>
 		/// Общая глубина.
@@ -28,9 +18,19 @@
 		public double TotalDepth { get; }
 
 		/// <summary>
-		/// Id скважины.
+		/// Количество интервалов.
 		/// </summary>
-		public string WellId { get; }
+		public int IntervalCount { get; }
+
+		/// <summary>
+		/// Средняя пористость.
+		/// </summary>
+		public double AveragePorosity { get; }
+
+		/// <summary>
+		/// Самая распространённая порода.
+		/// </summary>
+		public string MostCommonRock { get; }
 
 		#endregion Public Properties
 

@@ -33,6 +33,9 @@ namespace WellAnalyzer.ViewModels
 		/// <inheritdoc <see cref="IWellValidationService" />
 		private readonly IWellValidationService _wellValidationService;
 
+		/// <inheritdoc <see cref="IJsonExportService" />
+		private readonly IJsonExportService _jsonExportService;
+
 		/// <summary>
 		/// Поле для хранения булевого значения доступности кнопки выбора файла.
 		/// </summary>
@@ -65,6 +68,11 @@ namespace WellAnalyzer.ViewModels
 		public IAsyncRelayCommand OpenFileCommand { get; }
 
 		/// <summary>
+		/// Команда экспорта сводной информации в JSON.
+		/// </summary>
+		public IAsyncRelayCommand ExportJsonCommand { get; }
+
+		/// <summary>
 		/// Сообщение о статусе выполняемой операции.
 		/// </summary>
 		public string StatusMessage
@@ -95,18 +103,20 @@ namespace WellAnalyzer.ViewModels
 		/// <param name="wellBuilderService">Сервис сборки моделей скважин из импортированных строк.</param>
 		/// <param name="wellSummaryService">Сервис расчета сводки по скважине.</param>
 		/// <param name="wellValidationService">Сервис валидации данных по скважине.</param>
-		public MainWindowViewModel(ICsvImportService csvImportService, IFilePickerService filePickerService, IWellBuilderService wellBuilderService, IWellSummaryService wellSummaryService, IWellValidationService wellValidationService)
+		public MainWindowViewModel(ICsvImportService csvImportService, IFilePickerService filePickerService, IWellBuilderService wellBuilderService, IWellSummaryService wellSummaryService, IWellValidationService wellValidationService, IJsonExportService jsonExportService)
 		{
 			_csvImportService = csvImportService;
 			_filePickerService = filePickerService;
 			_wellBuilderService = wellBuilderService;
 			_wellSummaryService = wellSummaryService;
 			_wellValidationService = wellValidationService;
+			_jsonExportService = jsonExportService;
 
 			WellSummaries = new ObservableCollection<WellSummary>();
 			ValidationErrors = new ObservableCollection<ValidationError>();
 
 			OpenFileCommand = new AsyncRelayCommand(OpenFileAsync, CanOpenFile);
+			ExportJsonCommand = new AsyncRelayCommand(ExportJsonAsync);
 		}
 
 		#endregion Public Constructors
@@ -129,6 +139,33 @@ namespace WellAnalyzer.ViewModels
 			}
 
 			return wellSummaries;
+		}
+
+		private async Task ExportJsonAsync()
+		{
+			try
+			{
+				IsBusy = true;
+
+				string? filePath = await _filePickerService.PickJsonSaveFileAsync();
+
+				if (string.IsNullOrWhiteSpace(filePath))
+				{
+					return;
+				}
+
+				await _jsonExportService.ExportAsync(WellSummaries, filePath);
+
+				StatusMessage = $"JSON exported successfully: {filePath}";
+			}
+			catch (Exception ex)
+			{
+				StatusMessage = $"JSON export failed: {ex.Message}";
+			}
+			finally
+			{
+				IsBusy = false;
+			}
 		}
 
 		/// <summary>
