@@ -58,6 +58,7 @@ namespace WellAnalyzer.ViewModels
 				if (SetProperty(ref _isBusy, value))
 				{
 					OpenFileCommand.NotifyCanExecuteChanged();
+					ExportJsonCommand.NotifyCanExecuteChanged();
 				}
 			}
 		}
@@ -116,7 +117,7 @@ namespace WellAnalyzer.ViewModels
 			ValidationErrors = new ObservableCollection<ValidationError>();
 
 			OpenFileCommand = new AsyncRelayCommand(OpenFileAsync, CanOpenFile);
-			ExportJsonCommand = new AsyncRelayCommand(ExportJsonAsync);
+			ExportJsonCommand = new AsyncRelayCommand(ExportJsonAsync, CanSaveJson);
 		}
 
 		#endregion Public Constructors
@@ -175,6 +176,15 @@ namespace WellAnalyzer.ViewModels
 		private bool CanOpenFile()
 		{
 			return !IsBusy;
+		}
+
+		/// <summary>
+		/// Доступна ли кнопка экспорта JSON.
+		/// </summary>
+		/// <returns>Булевое значение.</returns>
+		private bool CanSaveJson()
+		{
+			return !IsBusy && WellSummaries.Count > 0;
 		}
 
 		/// <summary>
