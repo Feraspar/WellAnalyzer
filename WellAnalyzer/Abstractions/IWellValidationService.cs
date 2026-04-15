@@ -2,6 +2,7 @@
 {
 	using System.Collections.Generic;
 	using WellAnalyzer.Models;
+	using WellAnalyzer.Results;
 
 	/// <summary>
 	/// Интерфейс для сервиса валидации данных по скважине.
@@ -15,7 +16,7 @@
 		/// </summary>
 		/// <param name="rows">Список строк.</param>
 		/// <returns>Список ошибок.</returns>
-		List<ValidationError> Validate(List<ImportedWellRow> rows);
+		WellValidationResult Validate(List<ImportedWellRow> rows);
 
 		#endregion Public Methods
 	}
