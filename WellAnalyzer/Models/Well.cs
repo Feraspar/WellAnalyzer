@@ -20,7 +20,7 @@
 		#region Public Properties
 
 		/// <summary>
-		/// Список интервала.
+		/// Список интервалов скважины.
 		/// </summary>
 		public IReadOnlyList<Interval> Intervals => _intervals;
 

@@ -145,6 +145,9 @@ namespace WellAnalyzer.ViewModels
 			return wellSummaries;
 		}
 
+		/// <summary>
+		/// Экспортирует сводку по скважине в JSON.
+		/// </summary>
 		private async Task ExportJsonAsync()
 		{
 			try
