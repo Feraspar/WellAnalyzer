@@ -41,6 +41,9 @@ namespace WellAnalyzer.ViewModels
 		/// </summary>
 		private bool _isBusy;
 
+		/// <summary>
+		/// Поле для хранения статуса выполняемой операции.
+		/// </summary>
 		private string _statusMessage = "Select a CSV file to upload.";
 
 		#endregion Private Fields
