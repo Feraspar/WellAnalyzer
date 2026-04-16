@@ -9,11 +9,15 @@
 	/// <summary>
 	/// Сервис валидации данных по скважине.
 	/// </summary>
-	public class WellValidationService : IWellValidationService
+	public class WellValidationService
 	{
 		#region Public Methods
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Вадириует данные из входящих строк.
+		/// </summary>
+		/// <param name="rows">Список строк.</param>
+		/// <returns>Результат валидации.</returns>
 		public WellValidationResult Validate(List<ImportedWellRow> rows)
 		{
 			List<ValidationError> errors = new List<ValidationError>();

@@ -9,11 +9,15 @@
 	/// <summary>
 	/// Сервис расчета сводки по скважине.
 	/// </summary>
-	public class WellSummaryService : IWellSummaryService
+	public class WellSummaryService
 	{
 		#region Public Methods
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Собирает сводку по скважине.
+		/// </summary>
+		/// <param name="well">Модель скважины.</param>
+		/// <returns>Сводка по скважине.</returns>
 		public WellSummary BuildSummary(Well well)
 		{
 			ArgumentNullException.ThrowIfNull(well);
