@@ -18,23 +18,14 @@ namespace WellAnalyzer.ViewModels
 	{
 		#region Private Fields
 
-		/// <inheritdoc <see cref="ICsvImportService" />
-		private readonly ICsvImportService _csvImportService;
-
 		/// <inheritdoc <see cref="IFilePickerService" />
 		private readonly IFilePickerService _filePickerService;
 
-		/// <inheritdoc <see cref="IWellBuilderService" />
-		private readonly IWellBuilderService _wellBuilderService;
-
-		/// <inheritdoc <see cref="IWellSummaryService" />
-		private readonly IWellSummaryService _wellSummaryService;
-
-		/// <inheritdoc <see cref="IWellValidationService" />
-		private readonly IWellValidationService _wellValidationService;
-
 		/// <inheritdoc <see cref="IJsonExportService" />
 		private readonly IJsonExportService _jsonExportService;
+
+		/// <inheritdoc <see cref="IWellFacade" />
+		private readonly IWellFacade _wellFacade;
 
 		/// <summary>
 		/// Поле для хранения булевого значения доступности кнопки выбора файла.
@@ -102,19 +93,14 @@ namespace WellAnalyzer.ViewModels
 		/// <summary>
 		/// Конструктор класса.
 		/// </summary>
-		/// <param name="csvImportService">Сервис для импорта CSV-файла.</param>
 		/// <param name="filePickerService">Сервис выбора файла из файловой системы.</param>
-		/// <param name="wellBuilderService">Сервис сборки моделей скважин из импортированных строк.</param>
-		/// <param name="wellSummaryService">Сервис расчета сводки по скважине.</param>
-		/// <param name="wellValidationService">Сервис валидации данных по скважине.</param>
-		public MainWindowViewModel(ICsvImportService csvImportService, IFilePickerService filePickerService, IWellBuilderService wellBuilderService, IWellSummaryService wellSummaryService, IWellValidationService wellValidationService, IJsonExportService jsonExportService)
+		/// <param name="jsonExportService">Сервис экспорта информации в Json-строку.</param>
+		/// <param name="wellFacade">Сервис сборки всей сводки по скважине.</param>
+		public MainWindowViewModel(IFilePickerService filePickerService, IJsonExportService jsonExportService, IWellFacade wellFacade)
 		{
-			_csvImportService = csvImportService;
 			_filePickerService = filePickerService;
-			_wellBuilderService = wellBuilderService;
-			_wellSummaryService = wellSummaryService;
-			_wellValidationService = wellValidationService;
 			_jsonExportService = jsonExportService;
+			_wellFacade = wellFacade;
 
 			WellSummaries = new ObservableCollection<WellSummary>();
 			ValidationErrors = new ObservableCollection<ValidationError>();
@@ -127,23 +113,6 @@ namespace WellAnalyzer.ViewModels
 
 		#region Private Methods
 
-		/// <summary>
-		/// Собирает коллекцию сводок по скважине через сервис.
-		/// </summary>
-		/// <param name="wells">Скважины.</param>
-		/// <returns>Коллекция сводок по скважине.</returns>
-		private List<WellSummary> BuildWellSummaries(List<Well> wells)
-		{
-			List<WellSummary> wellSummaries = new List<WellSummary>();
-
-			foreach (Well well in wells)
-			{
-				WellSummary wellSummary = _wellSummaryService.BuildSummary(well);
-				wellSummaries.Add(wellSummary);
-			}
-
-			return wellSummaries;
-		}
 
 		/// <summary>
 		/// Экспортирует сводку по скважине в JSON.
@@ -244,24 +213,12 @@ namespace WellAnalyzer.ViewModels
 
 				ClearCollections();
 
-				CsvImportResult importResult = await _csvImportService.ImportAsync(filePath, cancellationToken);
-				WellValidationResult validationResult = _wellValidationService.Validate(importResult.Rows);
+				WellProcessingResult result = await _wellFacade.BuildWellSummariesAsync(filePath, cancellationToken);
 
-				List<ValidationError> allErrors = new List<ValidationError>();
-				allErrors.AddRange(importResult.Errors);
-				allErrors.AddRange(validationResult.Errors);
+				FillSummaries(result.WellSummaries);
+				FillErrors(result.ValidationErrors);
 
-				List<Well> wells = _wellBuilderService.Build(validationResult.ValidRows);
-				List<WellSummary> wellSummaries = BuildWellSummaries(wells);
-
-				FillSummaries(wellSummaries);
-				FillErrors(allErrors);
-
-				StatusMessage = $"Loaded wells: {wellSummaries.Count}. Errors: {allErrors.Count}.";
-			}
-			catch (OperationCanceledException)
-			{
-				StatusMessage = "The operation has been cancelled.";
+				StatusMessage = $"Loaded wells: {result.WellSummaries.Count}. Errors: {result.ValidationErrors.Count}.";
 			}
 			catch (Exception ex)
 			{

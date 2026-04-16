@@ -67,10 +67,11 @@ namespace WellAnalyzer
 		{
 			services.AddSingleton<ICsvImportService, CsvImportService>();
 			services.AddSingleton<IFilePickerService, FilePickerService>();
-			services.AddSingleton<IWellBuilderService, WellBuilderService>();
-			services.AddSingleton<IWellSummaryService, WellSummaryService>();
-			services.AddSingleton<IWellValidationService, WellValidationService>();
+			services.AddSingleton<WellBuilderService>();
+			services.AddSingleton<WellSummaryService>();
+			services.AddSingleton<WellValidationService>();
 			services.AddSingleton<IJsonExportService, JsonExportService>();
+			services.AddSingleton<IWellFacade, WellFacade>();
 
 			services.AddTransient<MainWindowViewModel>();
 		}
