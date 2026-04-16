@@ -9,11 +9,15 @@
 	/// <summary>
 	/// Сервис сборки моделей скважин из импортированных строк.
 	/// </summary>
-	public class WellBuilderService : IWellBuilderService
+	public class WellBuilderService
 	{
 		#region Public Methods
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Собирает модели скважин из валидных строк.
+		/// </summary>
+		/// <param name="rows">Валидные строки.</param>
+		/// <returns>Список моделей скважин.</returns>
 		public List<Well> Build(List<ImportedWellRow> rows)
 		{
 			ArgumentNullException.ThrowIfNull(rows);
