@@ -40,30 +40,30 @@
                     HorizontalAlignment="Right"
                     Content="Export JSON" 
                     Command="{Binding ExportJsonCommand}" />
-
         </Grid>
-            <!-- Таблица со сводной информацией. -->
-            <GroupBox Grid.Row="1" Margin="0,10,0,0" Header="Well summary">
-                <DataGrid ItemsSource="{Binding WellSummaries}" AutoGenerateColumns="False" IsReadOnly="True">
-					<DataGrid.Columns>
-						<DataGridTextColumn Header="Well Id" Binding="{Binding WellId}" />
-                        <DataGridTextColumn Header="Total Depth" Binding="{Binding TotalDepth}" />
-                        <DataGridTextColumn Header="Intervals" Binding="{Binding IntervalCount}" />
-                        <DataGridTextColumn Header="Average Porosity" Binding="{Binding AveragePorosity, StringFormat={}{0:F3}}" />
-                        <DataGridTextColumn Header="Most Common Rock" Binding="{Binding MostCommonRock}" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </GroupBox>
+
+        <!-- Таблица со сводной информацией. -->
+        <GroupBox Grid.Row="1" Margin="0,10,0,0" Header="Well summary">
+            <DataGrid ItemsSource="{Binding WellSummaries}" AutoGenerateColumns="False" IsReadOnly="True">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Well Id" Binding="{Binding WellId}" />
+                    <DataGridTextColumn Header="Total Depth" Binding="{Binding TotalDepth}" />
+                    <DataGridTextColumn Header="Intervals" Binding="{Binding IntervalCount}" />
+                    <DataGridTextColumn Header="Average Porosity" Binding="{Binding AveragePorosity, StringFormat={}{0:F3}}" />
+                    <DataGridTextColumn Header="Most Common Rock" Binding="{Binding MostCommonRock}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
             
         <!-- Таблица со списком ошибок. -->
-            <GroupBox Grid.Row="1" Grid.Column="1" Margin="0,10,0,0" Header="Errors">
-				<DataGrid ItemsSource="{Binding ValidationErrors}" AutoGenerateColumns="False" IsReadOnly="True">
-					<DataGrid.Columns>
-						<DataGridTextColumn Header="Line" Binding="{Binding LineNumber}" />
-                        <DataGridTextColumn Header="Well Id" Binding="{Binding WellId}" />
-                        <DataGridTextColumn Header="Message" Binding="{Binding Message}" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </GroupBox>
-        </Grid>
+        <GroupBox Grid.Row="1" Grid.Column="1" Margin="0,10,0,0" Header="Errors">
+			<DataGrid ItemsSource="{Binding ValidationErrors}" AutoGenerateColumns="False" IsReadOnly="True">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Line" Binding="{Binding LineNumber}" />
+                    <DataGridTextColumn Header="Well Id" Binding="{Binding WellId}" />
+                    <DataGridTextColumn Header="Message" Binding="{Binding Message}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+    </Grid>
 </Window>
