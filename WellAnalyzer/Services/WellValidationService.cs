@@ -41,6 +41,51 @@
 		#region Private Methods
 
 		/// <summary>
+		/// Добавляет ошибку валидации для строки.
+		/// </summary>
+		/// <param name="errors">Список ошибок.</param>
+		/// <param name="row">Входящая строка.</param>
+		/// <param name="message">Сообщение о</param>
+		private void AddError(List<ValidationError> errors, ImportedWellRow row, string message)
+		{
+			errors.Add(new ValidationError(row.LineNumber, row.WellId, message));
+		}
+
+		/// <summary>
+		/// Проверяет, что DepthFrom не отрицателен.
+		/// </summary>
+		/// <param name="row">Входящая строка.</param>
+		/// <param name="errors">Список ошибок.</param>
+		/// <returns>Валидна ли строка.</returns>
+		private bool ValidateDepthFrom(ImportedWellRow row, List<ValidationError> errors)
+		{
+			if (row.DepthFrom >= 0)
+			{
+				return true;
+			}
+
+			AddError(errors, row, "DepthFrom must be greater than or equal to 0.");
+			return false;
+		}
+
+		/// <summary>
+		/// Проверяет, что DepthFrom меньше DepthTo.
+		/// </summary>
+		/// <param name="row">Входящая строка.</param>
+		/// <param name="errors">Список ошибок.</param>
+		/// <returns>Валидна ли строка.</returns>
+		private bool ValidateDepthRange(ImportedWellRow row, List<ValidationError> errors)
+		{
+			if (row.DepthFrom < row.DepthTo)
+			{
+				return true;
+			}
+
+			AddError(errors, row, "DepthFrom must be less than DepthTo.");
+			return false;
+		}
+
+		/// <summary>
 		/// Проверяет пересечения по интервалам в скважине.
 		/// </summary>
 		/// <param name="rows">Список строк</param>
@@ -72,6 +117,40 @@
 		}
 
 		/// <summary>
+		/// Проверяет диапазон пористости.
+		/// </summary>
+		/// <param name="row">Входящая строка.</param>
+		/// <param name="errors">Список ошибок.</param>
+		/// <returns>Валидна ли строка.</returns>
+		private bool ValidatePorosity(ImportedWellRow row, List<ValidationError> errors)
+		{
+			if (row.Porosity >= 0 && row.Porosity <= 1)
+			{
+				return true;
+			}
+
+			AddError(errors, row, "Porosity must be in range [0..1].");
+			return false;
+		}
+
+		/// <summary>
+		/// Проверяет, что порода указана.
+		/// </summary>
+		/// <param name="row">Входящая строка.</param>
+		/// <param name="errors">Список ошибок.</param>
+		/// <returns>Валидна ли строка.</returns>
+		private bool ValidateRock(ImportedWellRow row, List<ValidationError> errors)
+		{
+			if (!string.IsNullOrWhiteSpace(row.Rock))
+			{
+				return true;
+			}
+
+			AddError(errors, row, "Rock must not be empty.");
+			return false;
+		}
+
+		/// <summary>
 		/// Проверяет данные в строке.
 		/// </summary>
 		/// <param name="row">Входящая строка.</param>
@@ -79,33 +158,12 @@
 		/// <returns>Валидна ли строка.</returns>
 		private bool ValidateRow(ImportedWellRow row, List<ValidationError> errors)
 		{
-			bool isValid = true;
+			bool depthRangeValid = ValidateDepthRange(row, errors);
+			bool depthFromValid = ValidateDepthFrom(row, errors);
+			bool porosityValid = ValidatePorosity(row, errors);
+			bool rockValid = ValidateRock(row, errors);
 
-			if (row.DepthFrom >= row.DepthTo)
-			{
-				errors.Add(new ValidationError(row.LineNumber, row.WellId, "DepthFrom must be less than DepthTo."));
-				isValid = false;
-			}
-
-			if (row.DepthFrom < 0)
-			{
-				errors.Add(new ValidationError(row.LineNumber, row.WellId, "DepthFrom must be greater than or equal to 0."));
-				isValid = false;
-			}
-
-			if (row.Porosity < 0 || row.Porosity > 1)
-			{
-				errors.Add(new ValidationError(row.LineNumber, row.WellId, "Porosity must be in range [0..1]."));
-				isValid = false;
-			}
-
-			if (string.IsNullOrWhiteSpace(row.Rock))
-			{
-				errors.Add(new ValidationError(row.LineNumber, row.WellId, "Rock must not be empty."));
-				isValid = false;
-			}
-
-			return isValid;
+			return depthRangeValid && depthFromValid && porosityValid && rockValid;
 		}
 
 		#endregion Private Methods
