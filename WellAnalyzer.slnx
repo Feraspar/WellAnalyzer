@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="Tests/Tests.csproj" Id="a2a0be6b-e2dc-4843-864a-9b3e6d808dd7">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="WellAnalyzer/WellAnalyzer.csproj" />
 </Solution>
