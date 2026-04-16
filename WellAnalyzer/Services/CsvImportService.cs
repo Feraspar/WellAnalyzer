@@ -23,12 +23,6 @@
 			List<ImportedWellRow> rows = new List<ImportedWellRow>();
 			List<ValidationError> errors = new List<ValidationError>();
 
-			if (string.IsNullOrWhiteSpace(filePath))
-			{
-				errors.Add(new ValidationError(0, string.Empty, "File path is empty."));
-				return new CsvImportResult(rows, errors);
-			}
-
 			if (!File.Exists(filePath))
 			{
 				errors.Add(new ValidationError(0, string.Empty, "File does not exist."));
